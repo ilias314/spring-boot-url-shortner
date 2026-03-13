@@ -10,7 +10,7 @@ import java.util.Random;
  * Generates 6-8 character alphanumeric codes with collision handling.
  */
 @Component
-public class shortCodeGenerator {
+public class ShortCodeGenerator {
 
     private static final String CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int MIN_LENGTH = 6;
@@ -20,7 +20,7 @@ public class shortCodeGenerator {
 
     private final ShortUrlRepository shortUrlRepository;
 
-    public shortCodeGenerator(ShortUrlRepository shortUrlRepository) {
+    public ShortCodeGenerator(ShortUrlRepository shortUrlRepository) {
         this.shortUrlRepository = shortUrlRepository;
     }
 
