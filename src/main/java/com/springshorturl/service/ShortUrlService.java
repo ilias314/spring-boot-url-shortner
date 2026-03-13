@@ -3,8 +3,11 @@ package com.springshorturl.service;
 import com.springshorturl.dto.CreateShortUrlResponse;
 import com.springshorturl.entity.ShortUrl;
 import com.springshorturl.repository.ShortUrlRepository;
+import com.springshorturl.util.ShortCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+
 
 import java.security.SecureRandom;
 
@@ -14,36 +17,19 @@ public class ShortUrlService {
     @Autowired
     private ShortUrlRepository repository;
 
+    @Autowired
+    private ShortCodeGenerator shortCodeGenerator;
+
     public CreateShortUrlResponse createShortUrl(String originalUrl) {
-        String shortCode = generateUniqueShortCode();
+        String shortCode = shortCodeGenerator.generateShortCode();
         ShortUrl entity = new ShortUrl();
         entity.setOriginalUrl(originalUrl);
         entity.setShortCode(shortCode);
+        entity.setCreatedAt(LocalDateTime.now());
         repository.save(entity);
         String shortUrl = "http://localhost:8080/" + shortCode;
         return new CreateShortUrlResponse(shortCode, shortUrl);
     }
 
-    private String generateUniqueShortCode() {
-        int retries = 5;
-        while (retries > 0) {
-            String code = generateRandomCode();
-            if (!repository.existsByShortCode(code)) {
-                return code;
-            }
-            retries--;
-        }
-        throw new RuntimeException("Could not generate unique code");
-    }
 
-    private String generateRandomCode() {
-        SecureRandom random = new SecureRandom();
-        int length = 6 + random.nextInt(3); // 6-8 characters
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return sb.toString();
-    }
 }
