@@ -9,12 +9,15 @@ The infrastructure is fully containerized using Docker Compose for seamless loca
 ```mermaid
 flowchart TD
     Client([Client]) --> API(Spring Boot API)
-    API -->|Persistent storage for URLs and analytics| DB[(PostgreSQL)]
-    API -->|In-memory cache for blazing fast redirects| Cache[(Redis)]
+    API -->|Persistent storage| DB[(PostgreSQL)]
+    API -->|High-speed cache| Cache[(Redis)]
+    Admin([Developer]) --> PG(pgAdmin GUI)
+    PG -.->|Manage| DB
     
     style API fill:#6DB33F,stroke:#333,stroke-width:2px,color:#fff
     style DB fill:#336791,stroke:#333,stroke-width:2px,color:#fff
     style Cache fill:#DC382D,stroke:#333,stroke-width:2px,color:#fff
+    style PG fill:#336791,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ## Tech Stack
@@ -25,7 +28,7 @@ flowchart TD
 | **Framework** | Spring Boot, Spring Web, Spring Data JPA |
 | **Database** | PostgreSQL |
 | **Caching** | Redis, Spring Data Redis |
-| **Infrastructure**| Docker & Docker Compose |
+| **Infrastructure**| Docker & Docker Compose, pgAdmin 4 |
 | **Tools** | Lombok, Hibernate Validation |
 
 ## ✨ Features
