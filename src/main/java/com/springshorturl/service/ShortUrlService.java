@@ -7,6 +7,9 @@ import com.springshorturl.util.ShortCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import com.springshorturl.dto.GetShortUrlMetadataResponse;
+import com.springshorturl.dto.GetShortUrlAnalyticsResponse;
+import java.util.Optional;
 
 
 import java.security.SecureRandom;
@@ -29,6 +32,33 @@ public class ShortUrlService {
         repository.save(entity);
         String shortUrl = "http://localhost:8080/" + shortCode;
         return new CreateShortUrlResponse(shortCode, shortUrl);
+    }
+    public Optional<GetShortUrlMetadataResponse> getShortUrlMetadata(String shortCode) {
+        Optional<ShortUrl> opt = repository.findByShortCode(shortCode);
+        if (opt.isPresent()) {
+            ShortUrl url = opt.get();
+            return Optional.of(new GetShortUrlMetadataResponse(
+                    url.getOriginalUrl(),
+                    url.getShortCode(),
+                    url.getCreatedAt(),
+                    url.getExpiresAt(),
+                    url.getClickCount()
+            ));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<GetShortUrlAnalyticsResponse> getShortUrlAnalytics(String shortCode) {
+        Optional<ShortUrl> opt = repository.findByShortCode(shortCode);
+        if (opt.isPresent()) {
+            ShortUrl url = opt.get();
+            return Optional.of(new GetShortUrlAnalyticsResponse(
+                    url.getClickCount(),
+                    url.getCreatedAt(),
+                    url.getExpiresAt()
+            ));
+        }
+        return Optional.empty();
     }
 
 
